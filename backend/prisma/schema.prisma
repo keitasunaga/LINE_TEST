@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// LINEユーザー情報
+model User {
+  id          String   @id @default(cuid())
+  lineUserId  String   @unique @map("line_user_id")
+  displayName String?  @map("display_name")
+  pictureUrl  String?  @map("picture_url")
+  statusMessage String? @map("status_message")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  messages    Message[]
+  sessions    Session[]
+
+  @@map("users")
+}
+
+// メッセージ履歴
+model Message {
+  id        String      @id @default(cuid())
+  userId    String      @map("user_id")
+  type      MessageType
+  content   String?
+  timestamp DateTime    @default(now())
+  
+  // リレーション
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+// セッション管理（会話の状態管理）
+model Session {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  state     String?  // 会話の状態（JSON形式で保存）
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  expiresAt DateTime @map("expires_at")
+
+  // リレーション
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+  @@map("sessions")
+}
+
+// Webhook イベントログ
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventType String   @map("event_type")
+  payload   String   // JSON形式でイベント全体を保存
+  processed Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("webhook_events")
+}
+
+// メッセージタイプの列挙型
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+  LOCATION
+  STICKER
+  TEMPLATE
+  FLEX
+  QUICK_REPLY
+}
