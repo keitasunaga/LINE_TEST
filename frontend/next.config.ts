@@ -1,0 +1,47 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  // Docker用のstandaloneモード
+  output: 'standalone',
+
+  // 環境変数設定
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_LIFF_ID: process.env.NEXT_PUBLIC_LIFF_ID || '',
+  },
+
+  // 最適化設定
+  compress: true,
+  poweredByHeader: false,
+
+  // 画像最適化
+  images: {
+    domains: ['profile.line-scdn.net', 't.me'],
+    unoptimized: process.env.NODE_ENV === 'production',
+  },
+
+  // セキュリティヘッダー設定
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+};
+
+export default nextConfig;

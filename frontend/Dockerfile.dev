@@ -1,0 +1,23 @@
+# Development Dockerfile for Next.js 15
+FROM node:20-alpine
+
+# pnpmのインストール
+RUN npm install -g pnpm
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# package.jsonとpnpm-lock.yamlをコピー
+COPY package.json pnpm-lock.yaml* ./
+
+# 依存関係をインストール
+RUN pnpm install
+
+# ソースコードをコピー
+COPY . .
+
+# ポート3001を公開
+EXPOSE 3001
+
+# 開発サーバーを起動
+CMD ["pnpm", "dev"] 
