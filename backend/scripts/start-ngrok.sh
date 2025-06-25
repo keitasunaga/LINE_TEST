@@ -34,5 +34,5 @@ echo ""
 echo "Press Ctrl+C to stop ngrok"
 echo "=============================================="
 
-# ngrokを起動（シンプルコマンド）
-ngrok http 3000 --hostname=linebot-webhook.ngrok.io 
+# ngrok v3でHTTPトンネルを起動
+ngrok http 3000 --url=linebot-webhook.ngrok.io 
