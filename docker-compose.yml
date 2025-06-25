@@ -11,8 +11,6 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
-      - NEXT_PUBLIC_LIFF_ID=${NEXT_PUBLIC_LIFF_ID}
     env_file:
       - ./frontend/.env
     volumes:
@@ -35,11 +33,6 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
-      - DATABASE_URL=postgresql://linebot_user:linebot_password@postgres:5432/linebot_db
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - LINE_CHANNEL_SECRET=${LINE_CHANNEL_SECRET}
-      - LINE_CHANNEL_ACCESS_TOKEN=${LINE_CHANNEL_ACCESS_TOKEN}
     env_file:
       - ./backend/.env
     volumes:
@@ -78,6 +71,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+
 
 networks:
   app-network:
