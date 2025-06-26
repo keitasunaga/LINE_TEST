@@ -187,8 +187,8 @@ export class LineBotService {
             height: 1686,
           },
           action: {
-            type: 'message',
-            text: 'デジタルID',
+            type: 'uri',
+            uri: 'https://liff.line.me/2007636688-35wNXQZa',
           },
         },
         {

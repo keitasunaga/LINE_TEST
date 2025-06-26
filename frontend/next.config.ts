@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Docker用のstandaloneモード
   output: 'standalone',
 
+  // ngrok対応の開発環境設定
+  allowedDevOrigins: ['linewebapp.ngrok.io'],
+
   // 環境変数設定
   env: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000',
