@@ -205,8 +205,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
 
       const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+
       if (!liffId) {
-        throw new Error('LIFF IDが設定されていません');
+        throw new Error(`LIFF IDが設定されていません。環境変数: ${process.env.NEXT_PUBLIC_LIFF_ID}`);
       }
 
       // LIFF初期化
@@ -249,7 +250,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
       setLiffInfo(info);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '不明なエラーが発生しました';
+      const errorMessage = error instanceof Error
+        ? `${error.message} (URL: ${window.location.href})`
+        : `不明なエラーが発生しました (URL: ${window.location.href})`;
       setLiffError(errorMessage);
 
       // フォールバック情報を設定
