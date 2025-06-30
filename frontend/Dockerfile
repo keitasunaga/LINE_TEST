@@ -16,6 +16,17 @@ RUN pnpm install --frozen-lockfile --production=false
 # Builder stage
 FROM base AS builder
 WORKDIR /app
+
+# ビルド引数を受け取る
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_LIFF_ID
+ARG NEXT_PUBLIC_APP_ENV
+
+# 環境変数として設定
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_LIFF_ID=$NEXT_PUBLIC_LIFF_ID
+ENV NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

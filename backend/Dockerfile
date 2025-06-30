@@ -29,7 +29,6 @@ RUN corepack enable pnpm
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=3000
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nestjs
@@ -39,14 +38,16 @@ RUN adduser --system --uid 1001 nestjs
 COPY --from=builder --chown=nestjs:nestjs /app/dist ./dist
 COPY --from=builder --chown=nestjs:nestjs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nestjs /app/package.json ./package.json
+# Copy assets directory for runtime usage (rich menu images, etc.)
+COPY --from=builder --chown=nestjs:nestjs /app/assets ./assets
 
 USER nestjs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/health || exit 1
+  CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
 
 CMD ["node", "dist/main"] 
